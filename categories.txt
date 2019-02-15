@@ -1,0 +1,5 @@
+home
+school
+project
+hobbies
+work

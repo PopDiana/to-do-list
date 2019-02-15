@@ -1,0 +1,15 @@
+project
+school
+3
+dishes
+home
+2
+paint
+hobbies
+1
+go to work
+work
+3
+read
+hobbies
+2
