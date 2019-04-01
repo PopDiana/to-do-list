@@ -1,0 +1,195 @@
+\documentclass{article}
+%% \usepackage{times}
+
+\usepackage{float}
+\usepackage{latexsym}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true}
+\usepackage{enumitem,amssymb}
+\newlist{todolist}{itemize}{4}
+\setlist[todolist]{label=$\square$}
+\begin{document}
+\begin{titlepage}
+	\centering
+    \vspace{3cm}
+	{\scshape\Large Programming Techniques Project \par}
+	\vspace{4cm}
+	{\huge\bfseries\LARGE TO-DO LIST \par}
+	\vspace{2cm}
+	{\Large STUDENT: POP DIANA-\c{S}TEFANIA\par}
+	\vspace{1cm}
+	{\Large GROUP: C.EN. 1.2A\par}
+	\vspace{1cm}
+	{\Large YEAR: I\par}
+	\vspace{1cm}
+	\vfill
+% Bottom of the page
+\end{titlepage}
+
+\begin{centering}
+\vspace{1cm}
+{\scshape\Large Technical report \par}
+\end{centering}
+\vspace{1.5cm}
+% sections
+\section{Problem statement}
+The aim of the assignment is to create a command line application that will have the functionality of a to-do list. The application will prompt the user to enter chores or tasks, and it will store them in a permanent location. It will then allow the user to enter as many tasks as desired but will stop storing tasks by entering a blank task. Tasks are categorized into different categories which can be interacted with (create, delete, modify, etc.), and have different priorities which can be sorted/displayed after. At user's latitude, the tasks can be displayed entirely or, for example, by category. The application also enables the user to remove a task of choice from the list, to signify it's been completed.
+
+\section{Pseudocode}
+
+Since the information is stored and operated with via simply linked lists the algorithms used to implement the program are fairly simple,  such as:
+    \begin{itemize}
+        \item Adding a node to a list
+        
+        \item Deleting a node from a list
+        
+        \item Displaying the list/the information contained by the list
+    \end{itemize}
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tabbing}
+ADD ($data$ , $head$) \\
+1.\indent $iterator \leftarrow head$\\
+2.\indent {\bf while }\= $next[iterator]$ != $NIL$ {\bf do}\\
+3.\indent   \>$iterator \leftarrow$ $next[iterator]$\\
+4.\indent$last \leftarrow iterator$\\
+5.\indent$next[last] \leftarrow new$\\
+6.\indent$\it{info}[new]$ $\leftarrow data$\\
+7.\indent$next[new] \leftarrow NIL$\\
+\\
+This algorithm is used in functions such as \textit{add\_task}, \textit{initialize\_categories}\\ and \textit{create\_category}.
+\end{tabbing}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tabbing}
+DELETE ($data$ , $head$) \\ $\rhd$ Removes a node from a list based on its specified field\\
+1.\indent $iterator \leftarrow head$\\
+2.\indent $element \leftarrow head$\\
+3.\indent {\bf while }\= $next[next[iterator]]$  != $NIL$ {\bf do}\\
+4.\indent   \>{\bf if }\=$\textit{info}[next[iterator]]$ $= data$ {\bf then}\\
+5.\indent\>\>$element \leftarrow next[iterator]$\\
+6.\indent\>\>$next[iterator] \leftarrow next[next[iterator]]$\\
+7.\indent\>\>free \textit{element}\\
+8.\indent\>$iterator \leftarrow next[iterator]$\\
+9.\indent{\bf if }$\textit{info}[\=next[iterator]]  = data $ 
+{\bf then }\\
+10.\indent\>$element \leftarrow next[iterator]$\\
+11.\indent\>$next[iterator] \leftarrow next[next[iterator]]$\\
+12.\indent\>free \textit{element} \\
+\\
+This algorithm is used in functions such as \textit{remove\_task} and \textit{delete\_category}.
+\end{tabbing}
+\end{center}
+\end{figure}
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tabbing}
+DISPLAY ($head$) \\
+1.\indent $iterator \leftarrow head$\\
+4.\indent {\bf while }\= $next[iterator]$  != $NIL$ {\bf do}\\
+5.\indent   \>{\bf write } $\textit{info}[iterator]$\\
+6.\indent   \>$iterator \leftarrow next[iterator]$\\
+7.\indent{\bf write} $\textit{info}[iterator]$\\
+\\
+This algorithm is used in functions such as \textit{display\_tasks}, \textit{display\_by\_category},\\ \textit{display\_by\_priority}, \textit{update\_list}, \textit{update\_categories}.
+\end{tabbing}
+\end{center}
+\end{figure}
+
+
+
+
+\section{Application design}
+
+     \vspace{0.5cm}
+     
+    \textbf{Architectural overview :}
+   
+    \vspace{0.5cm}
+    The permanent locations to store the information the program will operate with are two files, namely: \textbf{tasks.txt} (to store the tasks, along with their category and priority) and \textbf{categories.txt} (to store the categories, this file was created due to multiple operations regarding the category field). Firstly, the information from the files will be read into two different simply linked lists : \textbf{tasks} and \textbf{categories}. After initializing the lists the program will read the commands provided by the user, and the information from the lists will be transferred back into its permanent location.
+    \vspace{1.5cm}
+
+    \textbf{Principal functions : }
+        \begin{itemize}
+            \item Initialize list
+            \item Initialize categories
+            \item Read commands
+            \item Update tasks
+            \item Update categories
+        \end{itemize}
+
+    The \textbf{read commands} function will treat every command entered by the user as follows:
+        \begin{itemize}
+            \item Command 't' : It will prompt the user to enter a task with its specified category and priority until entering the blank task which will not be stored. It will verify if the category is valid( already exist in the categories' list) or else it will create it automatically. Also, it will ask for a priority between \textbf{1} and \textbf{3} (\textbf{1} meaning \textbf{"low priority"} and \textbf{3} meaning \textbf{"most important"}).
+            
+            \item Command 'g': It refers to the category field. The user can choose to create a category (command 'c'), delete a category (command 'e') or modify an existing category (command 'm').
+            
+            \item Command 'd': The display command. It can display all tasks (command 'a') or display by category (command 'g') which will ask the user to enter a category to display the tasks after.
+            
+            \item Command 'p': It refers to the priority field. The user can choose to display all task by increasing (command 'i') or decreasing (command 'd') priority.
+            
+            \item Command 'r': The remove task command. It will ask the user to enter the name of the task to remove from the tasks' list.
+            
+            \item Command 'x': It exits the application.
+        \end{itemize}
+    \vspace{0.5cm}
+    
+\textbf{A list of all the other functions used in the program :}
+    \begin{itemize}
+        \item Add task : It adds a task with all its fields (name, category, priority) to the tasks list.
+        
+        \item Valid category : It searches in the categories' list for a specified category and verifies if it exists in the list.
+        
+        \item Create category : It creates a new category in the categories' list.
+        
+        \item Delete category : It deletes the specified category from the categories' list.
+        
+        \item Modify category : Modifies the name of a category into another in the categories' list.
+        
+        \item Modify task category : It modifies a category name from the category field of the tasks' list.
+        
+        \item Display tasks : Displays all tasks with all their fields from the tasks' list.
+        
+        \item Display by category : Displays all tasks (name, priority) with the specified category.
+        
+        \item Display by priority : Displays all tasks (name, category) with the specified priority.
+        
+        \item Remove task : It removes the task with the specified name from the tasks' list.
+
+    \end{itemize}
+    
+
+\vspace{20cm}
+\vfill
+
+
+
+\begin{thebibliography}{9}
+\label{sec_ref}
+
+\bibitem{Random string generator}
+\url{https://codereview.stackexchange.com/questions/29198/random-string-generator-in-c}
+\emph{Random string generator}.
+ 
+ \bibitem{Linked lists}
+\url{https://en.wikipedia.org/wiki/Linked_list}
+\emph{Linked lists}
+
+\bibitem{latex}
+\LaTeX project site,
+\url{http://latex-project.org/}
+
+\end{thebibliography}
+
+
+
+\end{document}
+
+
